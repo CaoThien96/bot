@@ -5,6 +5,8 @@
 // will compile your contracts, add the Hardhat Runtime Environment's members to the
 // global scope, and execute the script.
 const { ethers } = require("hardhat");
+const { getAccount } = require("./share");
+
 async function main() {
 
     const currentTimestampInSeconds = Math.round(Date.now() / 1000);
@@ -13,16 +15,15 @@ async function main() {
 
     const lockedAmount = hre.ethers.utils.parseEther("1");
 
-    const signers = await ethers.getSigners()
     const start = process.env.START_INDEX
     const end = process.env.END_INDEX
     for (let index = start; index < end; index++) {
-        const signer = signers[index]
+        const { signer, account } = getAccount(index)
         const Lock = await hre.ethers.getContractFactory("Lock");
         const lock = await Lock.connect(signer).deploy(unlockTime, { value: lockedAmount });
 
-        console.log('Token:', {
-            signer: signer.address,
+        console.log('Deploy:', {
+            owner: account,
             lock: lock.address
         })
     }
@@ -34,3 +35,6 @@ main().catch((error) => {
     console.error(error);
     process.exitCode = 1;
 });
+module.exports={
+    getAccount
+}
