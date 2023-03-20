@@ -10,6 +10,7 @@
   },
   "scripts": {
     "local-deploy": "npx hardhat run --network localhost scripts/deploy-token.js",
-    "test": "npx hardhat test "
+    "scroll-deploy":"npx hardhat run --network scrollAlpha scripts/deploy-token.js",
+    "test": "npx hardhat test"
   }
 }
